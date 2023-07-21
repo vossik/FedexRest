@@ -5,7 +5,7 @@ namespace FedexRest\Services\Ship\Entity;
 class ShippingChargesPayment
 {
     public ?string $paymentType;
-    public ?Payor $payor;
+    public ?Payor $payor = null;
 
     /**
      * @param string  $paymentType
