@@ -30,7 +30,7 @@ class ShippingChargesPayment
         }
 
         if ($this->payor !== null) {
-            $data['payor'] = $this->payor->prepare();
+            $data['payor']['responsibleParty'] = $this->payor->prepare();
         }
 
         return $data;
