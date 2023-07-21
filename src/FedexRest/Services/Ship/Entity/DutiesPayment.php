@@ -7,9 +7,9 @@ use FedexRest\Services\Ship\Type\PaymentType;
 
 class DutiesPayment
 {
-    public ?PaymentType $paymentType = null;
+    public ?string $paymentType = null;
 
-    public function setPaymentType(PaymentType $paymentType) : DutiesPayment
+    public function setPaymentType(string $paymentType) : DutiesPayment
     {
         $this->paymentType = $paymentType;
 
