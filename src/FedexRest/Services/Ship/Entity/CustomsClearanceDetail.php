@@ -4,7 +4,7 @@ namespace FedexRest\Services\Ship\Entity;
 
 use FedexRest\Entity\Address;
 
-class Payor
+class CustomsClearanceDetail
 {
     public ?bool $isDocumentOnly = null;
     public ?DutiesPayment $dutiesPayment = null;
@@ -14,20 +14,20 @@ class Payor
      * @param string  $paymentType
      * @return $this
      */
-    public function withAddress(Address $address)
+    public function setIsDocumentOnly(bool $isDocumentOnly) : CustomsClearanceDetail
     {
-        $this->address = $address;
+        $this->isDocumentOnly = $isDocumentOnly;
         return $this;
     }
 
-    public function setAccountNumber(int $accountNumber): Payor {
-        $this->accountNumber = $accountNumber;
+    public function setDutiesPayment(DutiesPayment $dutiesPayment) : CustomsClearanceDetail {
+        $this->dutiesPayment = $dutiesPayment;
         return $this;
     }
 
-    public function setPhoneNumber(string $phoneNumber)
+    public function setCommodities(Commodities $commodities) : CustomsClearanceDetail
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->commodities = $commodities;
         return $this;
     }
 

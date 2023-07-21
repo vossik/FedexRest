@@ -14,6 +14,7 @@ use FedexRest\Services\Ship\Exceptions\MissingLabelResponseOptionsException;
 use FedexRest\Exceptions\MissingLineItemException;
 use FedexRest\Services\Ship\Exceptions\MissingShippingChargesPaymentException;
 use FedexRest\Services\AbstractRequest;
+use FedexRest\Services\Ship\Entity\CustomsClearanceDetail;
 use FedexRest\Services\Ship\Type\LabelDocOptionType;
 
 class CreateShipment extends AbstractRequest
@@ -41,6 +42,7 @@ class CreateShipment extends AbstractRequest
     protected bool $oneLabelAtATime = FALSE;
     protected string $preferredCurrency = '';
     protected int $totalPackageCount;
+    protected ?CustomsClearanceDetail $customsClearanceDetail = null;
 
     /**
      * {@inheritDoc}
@@ -453,6 +455,24 @@ class CreateShipment extends AbstractRequest
     }
 
     /**
+     * @param  CustomsClearanceDetail  $customsClearanceDetail
+     * @return \FedexRest\Services\Ship\CreateShipment
+     */
+    public function setCustomsClearanceDetail(CustomsClearanceDetail $customsClearanceDetail): CreateShipment
+    {
+        $this->customsClearanceDetail = $customsClearanceDetail;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomsClearanceDetail(): CustomsClearanceDetail
+    {
+        return $this->customsClearanceDetail;
+    }
+
+    /**
      * @return array
      */
     public function getRequestedShipment(): array {
@@ -504,6 +524,11 @@ class CreateShipment extends AbstractRequest
         if (!empty($this->totalPackageCount)) {
             $data['totalPackageCount'] = $this->totalPackageCount;
         }
+
+        if ($this->customsClearanceDetail !== null) {
+            $data['customsClearanceDetail'] = $this->customsClearanceDetail->prepare();
+        }
+        
         return $data;
     }
 
