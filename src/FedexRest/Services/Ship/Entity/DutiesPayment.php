@@ -9,6 +9,13 @@ class DutiesPayment
 {
     public ?PaymentType $paymentType = null;
 
+    public function setPaymentType(PaymentType $paymentType) : DutiesPayment
+    {
+        $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
     public function prepare(): array
     {
         $data = [];
