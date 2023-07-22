@@ -3,6 +3,7 @@
 namespace FedexRest\Services\Ship\Entity;
 
 use FedexRest\Entity\Dimensions;
+use FedexRest\Entity\Weight;
 
 class Commodities
 {
@@ -10,7 +11,7 @@ class Commodities
     public ?Value $customsValue = null;
     public ?string $countryOfManufacture = null;
     public ?Value $unitPrice = null;
-    public ?Dimensions $weight = null;
+    public ?Weight $weight = null;
     public $additionalMeasures = null;
     public ?int $numberOfPieces = null;
 
@@ -42,7 +43,7 @@ class Commodities
         return $this;
     }
 
-    public function setWeight(Dimensions $weight) : Commodities
+    public function setWeight(Weight $weight) : Commodities
     {
         $this->weight = $weight;
 
