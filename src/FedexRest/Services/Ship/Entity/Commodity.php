@@ -5,7 +5,7 @@ namespace FedexRest\Services\Ship\Entity;
 use FedexRest\Entity\Dimensions;
 use FedexRest\Entity\Weight;
 
-class Commodities
+class Commodity
 {
     public ?Value $unitPrice = null;
     public $additionalMeasures = null;
@@ -26,112 +26,112 @@ class Commodities
 
     // TODO: usmcaDetail
 
-    public function setDescription(string $description) : Commodities
+    public function setDescription(string $description) : Commodity
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function setCustomsValue(Value $value) : Commodities
+    public function setCustomsValue(Value $value) : Commodity
     {
         $this->customsValue = $value;
 
         return $this;
     }
 
-    public function setCountryOfManufacture(string $countryOfManufacture) : Commodities
+    public function setCountryOfManufacture(string $countryOfManufacture) : Commodity
     {
         $this->countryOfManufacture = $countryOfManufacture;
 
         return $this;
     }
 
-    public function setUnitPrice(Value $unitPrice) : Commodities
+    public function setUnitPrice(Value $unitPrice) : Commodity
     {
         $this->unitPrice = $unitPrice;
 
         return $this;
     }
 
-    public function setWeight(Weight $weight) : Commodities
+    public function setWeight(Weight $weight) : Commodity
     {
         $this->weight = $weight;
 
         return $this;
     }
 
-    public function setAdditionalMeasures(AdditionalMeasures $additionalMeasures) : Commodities
+    public function setAdditionalMeasures(AdditionalMeasures $additionalMeasures) : Commodity
     {
         $this->additionalMeasures = $additionalMeasures;
 
         return $this;
     }
 
-    public function setNumberOfPieces(int $numberOfPieces) : Commodities
+    public function setNumberOfPieces(int $numberOfPieces) : Commodity
     {
         $this->numberOfPieces = $numberOfPieces;
 
         return $this;
     }
 
-    public function setQuantity(int $quantity) : Commodities
+    public function setQuantity(int $quantity) : Commodity
     {
         $this->quantity = $quantity;
 
         return $this;
     }
 
-    public function setQuantityUnits(string $quantityUnits) : Commodities
+    public function setQuantityUnits(string $quantityUnits) : Commodity
     {
         $this->quantityUnits = $quantityUnits;
 
         return $this;
     }
 
-    public function setCIMarksAndNumbers(string $cIMarksAndNumbers) : Commodities
+    public function setCIMarksAndNumbers(string $cIMarksAndNumbers) : Commodity
     {
         $this->cIMarksAndNumbers = $cIMarksAndNumbers;
 
         return $this;
     }
 
-    public function setHarmonizedCode(string $harmonizedCode) : Commodities
+    public function setHarmonizedCode(string $harmonizedCode) : Commodity
     {
         $this->harmonizedCode = $harmonizedCode;
 
         return $this;
     }
 
-    public function setPurpose(string $purpose) : Commodities
+    public function setPurpose(string $purpose) : Commodity
     {
         $this->purpose = $purpose;
 
         return $this;
     }
 
-    public function setPartNumber(string $partNumber) : Commodities
+    public function setPartNumber(string $partNumber) : Commodity
     {
         $this->partNumber = $partNumber;
 
         return $this;
     }
 
-    public function setExportLicenseExpirationDate(string $exportLicenseExpirationDate) : Commodities
+    public function setExportLicenseExpirationDate(string $exportLicenseExpirationDate) : Commodity
     {
         $this->exportLicenseExpirationDate = $exportLicenseExpirationDate;
 
         return $this;
     }
 
-    public function setExportLicenseNumber(string $exportLicenseNumber) : Commodities
+    public function setExportLicenseNumber(string $exportLicenseNumber) : Commodity
     {
         $this->exportLicenseNumber = $exportLicenseNumber;
 
         return $this;
     }
 
-    public function setName(string $name) : Commodities
+    public function setName(string $name) : Commodity
     {
         $this->name = $name;
 

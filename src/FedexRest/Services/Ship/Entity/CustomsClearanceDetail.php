@@ -8,7 +8,8 @@ class CustomsClearanceDetail
 {
     public ?bool $isDocumentOnly = null;
     public ?DutiesPayment $dutiesPayment = null;
-    public ?Commodities $commodities = null;
+    /** @var Commodity[] $commodities */
+    public ?array $commodities = null;
 
     /**
      * @param string  $paymentType
@@ -17,17 +18,20 @@ class CustomsClearanceDetail
     public function setIsDocumentOnly(bool $isDocumentOnly) : CustomsClearanceDetail
     {
         $this->isDocumentOnly = $isDocumentOnly;
+        
         return $this;
     }
 
     public function setDutiesPayment(DutiesPayment $dutiesPayment) : CustomsClearanceDetail {
         $this->dutiesPayment = $dutiesPayment;
+
         return $this;
     }
 
-    public function setCommodities(Commodities $commodities) : CustomsClearanceDetail
+    public function setCommodities(Commodity ...$commodities) : CustomsClearanceDetail
     {
         $this->commodities = $commodities;
+
         return $this;
     }
 
@@ -35,18 +39,20 @@ class CustomsClearanceDetail
     {
         $data = [];
         
-        if ($this->isDocumentOnly === true) {
-            $data['isDocumentOnly'] = true;
-        } else {
-            $data['isDocumentOnly'] = false;
-        }
+        $data['isDocumentOnly'] = $this->isDocumentOnly === true;
 
         if ($this->dutiesPayment !== null) {
             $data['dutiesPayment'] = $this->dutiesPayment->prepare();
         }
 
         if ($this->commodities !== null) {
-            $data['commodities'] = [$this->commodities->prepare()];
+            $commodities = [];
+
+            foreach ($this->commodities as $commodity) {
+                $commodities[] = $commodity->prepare();
+            }
+
+            $data['commodities'] = $commodities;
         }
 
         return $data;
