@@ -7,7 +7,7 @@ use FedexRest\Entity\Dimensions;
 class ShipmentAttributes
 {
     protected ?string $serviceType = null;
-    protected ?Weight $weight = null;
+    protected ?\FedexRest\Entity\Weight $weight = null;
     protected ?string $packagingType = null;
     protected ?Dimensions $dimensions = null;
 

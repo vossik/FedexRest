@@ -3,11 +3,8 @@
 namespace FedexRest\Services\Pickup;
 
 use FedexRest\Services\AbstractRequest;
-use FedexRest\Services\Pickup\Entity\Address;
-use FedexRest\Services\Pickup\Entity\OriginDetail;
-use FedexRest\Services\Pickup\Entity\PickupNotificationDetail;
+use FedexRest\Entity\Address;
 use FedexRest\Services\Pickup\Entity\ShipmentAttributes;
-use FedexRest\Services\Pickup\Entity\Weight;
 
 class CheckPickupAvailability extends AbstractRequest
 {
