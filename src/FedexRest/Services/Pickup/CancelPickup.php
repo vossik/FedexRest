@@ -3,17 +3,168 @@
 namespace FedexRest\Services\Pickup;
 
 use FedexRest\Services\AbstractRequest;
-use FedexRest\Services\Pickup\Entity\OriginDetail;
-use FedexRest\Services\Pickup\Entity\PickupNotificationDetail;
-use FedexRest\Services\Pickup\Entity\Weight;
+use FedexRest\Services\Pickup\Entity\AccountAddressOfRecord;
 
 class CancelPickup extends AbstractRequest
 {
-    protected string $associatedAccountNumber;
+
+    protected int $associatedAccountNumber;
     protected string $pickupConfirmationCode;
     protected ?string $remarks = null;
     protected ?string $carrierCode = null;
-    protected \DateTime $scheduledDate;
+    protected ?AccountAddressOfRecord $accountAddressOfRecord = null;
+    protected string $scheduledDate;
+    protected ?string $location = null;
+
+    /**
+     * @return int
+     */
+    public function getAssociatedAccountNumber(): int
+    {
+        return $this->associatedAccountNumber;
+    }
+
+    /**
+     * @param int $associatedAccountNumber
+     * @return CancelPickup
+     */
+    public function setAssociatedAccountNumber(int $associatedAccountNumber): CancelPickup
+    {
+        $this->associatedAccountNumber = $associatedAccountNumber;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPickupConfirmationCode(): string
+    {
+        return $this->pickupConfirmationCode;
+    }
+
+    /**
+     * @param string $pickupConfirmationCode
+     * @return CancelPickup
+     */
+    public function setPickupConfirmationCode(string $pickupConfirmationCode): CancelPickup
+    {
+        $this->pickupConfirmationCode = $pickupConfirmationCode;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRemarks(): ?string
+    {
+        return $this->remarks;
+    }
+
+    /**
+     * @param string|null $remarks
+     * @return CancelPickup
+     */
+    public function setRemarks(?string $remarks): CancelPickup
+    {
+        $this->remarks = $remarks;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCarrierCode(): ?string
+    {
+        return $this->carrierCode;
+    }
+
+    /**
+     * @param string|null $carrierCode
+     * @return CancelPickup
+     */
+    public function setCarrierCode(?string $carrierCode): CancelPickup
+    {
+        $this->carrierCode = $carrierCode;
+        return $this;
+    }
+
+    /**
+     * @return AccountAddressOfRecord|null
+     */
+    public function getAccountAddressOfRecord(): ?AccountAddressOfRecord
+    {
+        return $this->accountAddressOfRecord;
+    }
+
+    /**
+     * @param AccountAddressOfRecord|null $accountAddressOfRecord
+     * @return CancelPickup
+     */
+    public function setAccountAddressOfRecord(?AccountAddressOfRecord $accountAddressOfRecord): CancelPickup
+    {
+        $this->accountAddressOfRecord = $accountAddressOfRecord;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheduledDate(): string
+    {
+        return $this->scheduledDate;
+    }
+
+    /**
+     * @param string $scheduledDate
+     * @return CancelPickup
+     */
+    public function setScheduledDate(string $scheduledDate): CancelPickup
+    {
+        $this->scheduledDate = $scheduledDate;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string|null $location
+     * @return CancelPickup
+     */
+    public function setLocation(?string $location): CancelPickup
+    {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function prepare(): array
+    {
+        $data = [
+            'associatedAccountNumber' => [
+                'value' => $this->associatedAccountNumber,
+            ],
+            'pickupConfirmationCode' => $this->pickupConfirmationCode,
+            'scheduledDate' => $this->scheduledDate,
+        ];
+        if (!empty($this->remarks)) {
+            $data['remarks'] = $this->remarks;
+        }
+        if (!empty($this->carrierCode)) {
+            $data['carrierCode'] = $this->carrierCode;
+        }
+        if (!empty($this->accountAddressOfRecord)) {
+            $data['accountAddressOfRecord'] = $this->accountAddressOfRecord->prepare();
+        }
+        if (!empty($this->location)) {
+            $data['location'] = $this->location;
+        }
+        return $data;
+    }
 
     /**
      * {@inheritDoc}
@@ -22,27 +173,13 @@ class CancelPickup extends AbstractRequest
         return '/pickup/v1/pickups/cancel';
     }
 
-    public function prepare() : array {
-        $data = [];
-
-        $data['associatedAccountNumber']['value'] = $this->associatedAccountNumber;
-        $data['pickupConfirmationCode'] = $this->pickupConfirmationCode;
-        $data['scheduledDate'] = $this->scheduledDate->format('Y-m-d');
-
-        if ($this->carrierCode !== null) {
-            $data['carrierCode'] = $this->carrierCode;
-        }
-
-        if ($this->remarks !== null) {
-            $data['remarks'] = $this->remarks;
-        }
-
-        return $data;
-    }
-
+    /**
+     * @return mixed|\Psr\Http\Message\ResponseInterface|string|void
+     * @throws \FedexRest\Exceptions\MissingAccessTokenException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function request() {
         parent::request();
-
         try {
             $query = $this->http_client->put($this->getApiUri($this->api_endpoint), [
                 'json' => $this->prepare(),
@@ -52,40 +189,5 @@ class CancelPickup extends AbstractRequest
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-    }
-
-    public function setAssociatedAccountNumber(string $associatedAccountNumber) : CancelPickup
-    {
-        $this->associatedAccountNumber = $associatedAccountNumber;
-
-        return $this;
-    }
-
-    public function setCarrierCode(string $carrierCode) : CancelPickup
-    {
-        $this->carrierCode = $carrierCode;
-
-        return $this;
-    }
-
-    public function setRemarks(?string $remarks = null) : CancelPickup
-    {
-        $this->remarks = $remarks;
-
-        return $this;
-    }
-
-    public function setScheduledDate(\DateTime $scheduledDate) : CancelPickup
-    {
-        $this->scheduledDate = $scheduledDate;
-
-        return $this;
-    }
-
-    public function setPickupConfirmationCode(string $pickupConfirmationCode) : CancelPickup
-    {
-        $this->pickupConfirmationCode = $pickupConfirmationCode;
-
-        return $this;
     }
 }

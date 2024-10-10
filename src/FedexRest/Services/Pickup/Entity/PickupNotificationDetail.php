@@ -4,53 +4,82 @@ namespace FedexRest\Services\Pickup\Entity;
 
 class PickupNotificationDetail
 {
-    /** @var ?EmailDetail[] $emailDatail */
-    protected ?array $emailDetails = null;
+
+    /**
+     * @var EmailAddress[]
+     */
+    protected array $emailAddresses = [];
     protected ?string $format = null;
     protected ?string $userMessage = null;
 
-    public function prepare() : array {
-        $data = [];
-
-        if ($this->emailDetails !== null) {
-            $emailDetails = [];
-
-            foreach ($this->emailDetails as $emailDetail) {
-                $emailDetails[] = $emailDetail->prepare();
-            }
-
-            $data['emailDetails'] = $emailDetails;
-        }
-
-        if ($this->format !== null) {
-            $data['format'] = $this->format;
-        }
-
-        if ($this->userMessage !== null) {
-            $data['userMessage'] = $this->userMessage;
-        }
-
-        return $data;
+    /**
+     * @return EmailAddress[]
+     */
+    public function getEmailAddresses(): array
+    {
+        return $this->emailAddresses;
     }
 
-    public function setFormat(?string $format = null) : PickupNotificationDetail
+    /**
+     * @param EmailAddress[] $emailAddresses
+     * @return PickupNotificationDetail
+     */
+    public function setEmailAddresses(array $emailAddresses): PickupNotificationDetail
+    {
+        $this->emailAddresses = $emailAddresses;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFormat(): ?string
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param string|null $format
+     * @return PickupNotificationDetail
+     */
+    public function setFormat(?string $format): PickupNotificationDetail
     {
         $this->format = $format;
-
         return $this;
     }
 
-    public function setUserMessage(?string $userMessage = null) : PickupNotificationDetail
+    /**
+     * @return string|null
+     */
+    public function getUserMessage(): ?string
+    {
+        return $this->userMessage;
+    }
+
+    /**
+     * @param string|null $userMessage
+     * @return PickupNotificationDetail
+     */
+    public function setUserMessage(?string $userMessage): PickupNotificationDetail
     {
         $this->userMessage = $userMessage;
-
         return $this;
     }
 
-    public function setEmailDetails(EmailDetail ...$emailDetails) : PickupNotificationDetail
+    public function prepare(): array
     {
-        $this->emailDetails = $emailDetails;
-
-        return $this;
+        $data = [
+            'emailDetails' => [],
+        ];
+        foreach ($this->emailAddresses as $emailAddress) {
+            $data['emailDetails'][] = $emailAddress->prepare();
+        }
+        if (!empty($this->format)) {
+            $data['format'] = $this->format;
+        }
+        if (!empty($this->userMessage)) {
+            $data['userMessage'] = $this->userMessage;
+        }
+        return $data;
     }
 }

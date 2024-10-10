@@ -3,10 +3,12 @@
 namespace FedexRest\Services\Ship;
 
 use FedexRest\Entity\Item;
+use FedexRest\Services\Ship\Entity\EmailNotificationDetail;
 use FedexRest\Services\Ship\Entity\Label;
 use FedexRest\Entity\Person;
 use FedexRest\Services\Ship\Entity\ShipmentSpecialServices;
 use FedexRest\Services\Ship\Entity\ShippingChargesPayment;
+use FedexRest\Services\Ship\Entity\SmartPostInfoDetail;
 use FedexRest\Services\Ship\Entity\Value;
 use FedexRest\Exceptions\MissingAccountNumberException;
 use FedexRest\Services\Ship\Exceptions\MissingLabelException;
@@ -14,7 +16,6 @@ use FedexRest\Services\Ship\Exceptions\MissingLabelResponseOptionsException;
 use FedexRest\Exceptions\MissingLineItemException;
 use FedexRest\Services\Ship\Exceptions\MissingShippingChargesPaymentException;
 use FedexRest\Services\AbstractRequest;
-use FedexRest\Services\Ship\Entity\CustomsClearanceDetail;
 use FedexRest\Services\Ship\Type\LabelDocOptionType;
 
 class CreateShipment extends AbstractRequest
@@ -27,6 +28,7 @@ class CreateShipment extends AbstractRequest
     protected string $packagingType = '';
     protected string $pickupType = '';
     protected int $accountNumber;
+    protected array $rateRequestTypes;
     protected array $lineItems = [];
     protected string $labelResponseOptions = '';
     protected ShipmentSpecialServices $shipmentSpecialServices;
@@ -38,11 +40,12 @@ class CreateShipment extends AbstractRequest
     protected string $recipientLocationNumber = '';
     protected int $totalWeight;
     protected Person $origin;
+    protected SmartPostInfoDetail $smartPostInfoDetail;
     protected bool $blockInsightVisibility = FALSE;
     protected bool $oneLabelAtATime = FALSE;
     protected string $preferredCurrency = '';
     protected int $totalPackageCount;
-    protected ?CustomsClearanceDetail $customsClearanceDetail = null;
+    protected EmailNotificationDetail $emailNotificationDetail;
 
     /**
      * {@inheritDoc}
@@ -78,7 +81,7 @@ class CreateShipment extends AbstractRequest
     }
 
     /**
-     * @return \FedexRest\Services\Ship\Entity\Person[]
+     * @return \FedexRest\Entity\Person[]
      */
     public function getRecipients(): array
     {
@@ -161,6 +164,17 @@ class CreateShipment extends AbstractRequest
     public function setAccountNumber(int $accountNumber): CreateShipment {
         $this->accountNumber = $accountNumber;
         return $this;
+    }
+
+    public function setRateRequestTypes(string ...$rateRequestTypes): CreateShipment
+    {
+        $this->rateRequestTypes = $rateRequestTypes;
+        return $this;
+    }
+
+    public function getRateRequestTypes(): array
+    {
+        return $this->rateRequestTypes;
     }
 
     /**
@@ -382,6 +396,17 @@ class CreateShipment extends AbstractRequest
         return $this->origin;
     }
 
+    public function setSmartPostInfoDetail(?SmartPostInfoDetail $smartPostInfoDetail): CreateShipment
+    {
+        $this->smartPostInfoDetail = $smartPostInfoDetail;
+        return $this;
+    }
+
+    public function getSmartPostInfoDetail(): ?SmartPostInfoDetail
+    {
+        return $this->smartPostInfoDetail;
+    }
+
     /**
      * @param  bool  $blockInsightVisibility
      * @return $this
@@ -455,24 +480,6 @@ class CreateShipment extends AbstractRequest
     }
 
     /**
-     * @param  CustomsClearanceDetail  $customsClearanceDetail
-     * @return \FedexRest\Services\Ship\CreateShipment
-     */
-    public function setCustomsClearanceDetail(CustomsClearanceDetail $customsClearanceDetail): CreateShipment
-    {
-        $this->customsClearanceDetail = $customsClearanceDetail;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCustomsClearanceDetail(): CustomsClearanceDetail
-    {
-        return $this->customsClearanceDetail;
-    }
-
-    /**
      * @return array
      */
     public function getRequestedShipment(): array {
@@ -494,41 +501,59 @@ class CreateShipment extends AbstractRequest
             'blockInsightVisibility' => $this->blockInsightVisibility,
             'requestedPackageLineItems' => $line_items,
         ];
+
         if (!empty($this->shippingChargesPayment)) {
             $data ['shippingChargesPayment'] = $this->shippingChargesPayment->prepare();
         }
+
         if (!empty($this->label)) {
             $data ['labelSpecification'] = $this->label->prepare();
         }
+
+        if (!empty($this->rateRequestTypes)) {
+            $data['rateRequestType'] = $this->rateRequestTypes;
+        }
+
         if (!empty($this->shipmentSpecialServices)) {
             $data['shipmentSpecialServices'] = $this->shipmentSpecialServices->prepare();
         }
+
         if (!empty($this->shippingChargesPayment)) {
             $data['shippingChargesPayment'] = $this->shippingChargesPayment->prepare();
         }
+
         if (!empty($this->totalDeclaredValue)) {
             $data['totalDeclaredValue'] = $this->totalDeclaredValue->prepare();
         }
+
         if (!empty($this->recipientLocationNumber)) {
             $data['recipientLocationNumber'] = $this->recipientLocationNumber;
         }
+
         if (!empty($this->totalWeight)) {
             $data['totalWeight'] = $this->totalWeight;
         }
+
         if (!empty($this->origin)) {
             $data['origin'] = $this->origin->prepare();
         }
+
+        if (!empty($this->smartPostInfoDetail)) {
+            $data['smartPostInfoDetail'] = $this->smartPostInfoDetail->prepare();
+        }
+
         if (!empty($this->preferredCurrency)) {
             $data['preferredCurrency'] = $this->preferredCurrency;
         }
+
         if (!empty($this->totalPackageCount)) {
             $data['totalPackageCount'] = $this->totalPackageCount;
         }
 
-        if ($this->customsClearanceDetail !== null) {
-            $data['customsClearanceDetail'] = $this->customsClearanceDetail->prepare();
+        if (!empty($this->emailNotificationDetail)) {
+            $data['emailNotificationDetail'] = $this->emailNotificationDetail->prepare();
         }
-        
+
         return $data;
     }
 
@@ -548,6 +573,7 @@ class CreateShipment extends AbstractRequest
         if (!empty($this->processingOptionType)) {
             $data['processingOptionType'] = $this->processingOptionType;
         }
+
         return $data;
     }
 
@@ -587,6 +613,18 @@ class CreateShipment extends AbstractRequest
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function getEmailNotificationDetail(): EmailNotificationDetail
+    {
+        return $this->emailNotificationDetail;
+    }
+
+    public function setEmailNotificationDetail(EmailNotificationDetail $emailNotificationDetail): static
+    {
+        $this->emailNotificationDetail = $emailNotificationDetail;
+
+        return $this;
     }
 
 }
