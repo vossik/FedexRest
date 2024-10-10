@@ -2,8 +2,6 @@
 
 namespace FedexRest\Services\Ship\Entity;
 
-use FedexRest\Entity\Address;
-
 class CustomsClearanceDetail
 {
     public ?bool $isDocumentOnly = null;
